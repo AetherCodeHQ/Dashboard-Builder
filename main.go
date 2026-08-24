@@ -1,26 +1,29 @@
+
 package main
 
 import (
 	"fmt"
 	"os"
+	"path/filepath"
+	"strings"
 )
 
-// dashboard_builder - Build data dashboards
-func dashboard_builder(path string) {
-	fmt.Println("========================================")
-	fmt.Println("  Dashboard-Builder")
-	fmt.Println("  Build data dashboards")
-	fmt.Println("========================================")
-	fmt.Println()
-	fmt.Println("Target:", path)
-	fmt.Println("Processing...")
-	fmt.Println("Done!")
-}
-
 func main() {
-	path := "."
+	dir := "."
 	if len(os.Args) > 1 {
-		path = os.Args[1]
+		dir = os.Args[1]
 	}
-	dashboard_builder(path)
+	var n int
+	filepath.Walk(dir, func(p string, info os.FileInfo, err error) error {
+		if err != nil || info.IsDir() {
+			return nil
+		}
+		if strings.HasPrefix(info.Name(), ".") {
+			return nil
+		}
+		n++
+		fmt.Println(p)
+		return nil
+	})
+	fmt.Printf("%d file(s)\n", n)
 }
